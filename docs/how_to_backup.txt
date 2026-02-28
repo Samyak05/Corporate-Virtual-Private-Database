@@ -1,0 +1,3 @@
+Run this command (terminal should be open inside this foder)
+
+sudo -u postgres psql -f /tmp/corporate_db_backup.sql
