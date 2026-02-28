@@ -93,8 +93,8 @@ psql
 ## 3️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/corporate-vpd.git
-cd corporate-vpd/database
+git clone https://github.com/Samyak05/Corporate-Virtual-Private-Database.git
+cd Corporate-Virtual-Private-Database/
 ```
 
 ---
@@ -105,7 +105,6 @@ Inside PostgreSQL shell:
 
 ```sql
 \i 01_database.sql
-\c corporate_db
 \i 02_tables.sql
 \i 03_roles_and_users.sql
 \i 04_seed_data.sql
