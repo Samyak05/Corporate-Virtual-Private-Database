@@ -4,3 +4,5 @@
 04_seed_data.sql
 05_app_roles.sql
 06_rls_policies.sql
+07_audit_functions.sql
+08_audit_triggers.sql

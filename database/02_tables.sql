@@ -37,3 +37,5 @@ CREATE TABLE audit_logs (
     access_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     result VARCHAR(20)
 );
+CREATE INDEX IF NOT EXISTS idx_audit_user ON audit_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_logs(access_time);
