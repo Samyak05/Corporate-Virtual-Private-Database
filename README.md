@@ -110,6 +110,7 @@ Inside PostgreSQL shell:
 \i 04_seed_data.sql
 \i 05_app_roles.sql
 \i 06_rls_policies.sql
+\i 07_audit_logging.sql
 ```
 
 Database setup complete ✅
