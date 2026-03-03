@@ -16,11 +16,14 @@ app_admin, app_manager, app_hr, app_employee, app_auditor;
 GRANT USAGE ON SCHEMA public TO
 app_admin, app_manager, app_hr, app_employee, app_auditor;
 
--- Table access (IMPORTANT: Keep SELECT so RLS works)
+-- Table access
 GRANT SELECT ON employees TO
 app_admin, app_manager, app_hr, app_employee;
 
+GRANT INSERT, UPDATE, DELETE ON employees TO
+app_admin;
+
 GRANT INSERT, UPDATE ON employees TO
-app_admin, app_manager, app_hr;
+app_manager, app_hr;
 
 GRANT SELECT ON audit_logs TO app_auditor;
