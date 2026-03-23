@@ -1,4 +1,4 @@
-# Corporate VPD Project
+# Corporate Secure Database with RBAC & RLS
 
 A PostgreSQL-based implementation of **Virtual Private Database (VPD)** concepts using **Row Level Security (RLS)** to enforce fine-grained, context-aware access control.
 
