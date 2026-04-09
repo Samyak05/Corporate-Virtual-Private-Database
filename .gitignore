@@ -1,7 +1,0 @@
-__pycache__/
-*.backup
-*.log
-.env
-*.db
-venv/
-node_modules/

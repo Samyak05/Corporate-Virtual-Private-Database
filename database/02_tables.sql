@@ -13,12 +13,20 @@ CREATE TABLE users (
 );
 
 CREATE TABLE employees (
-    emp_id SERIAL PRIMARY KEY,
-    emp_name VARCHAR(50),
-    department VARCHAR(50),
-    salary NUMERIC,
-    created_by VARCHAR(50),
-    sensitivity_level INT
+    emp_id INT PRIMARY KEY,
+    emp_name TEXT,
+    age INT,
+    gender TEXT,
+    department TEXT,
+    job_title TEXT,
+    experience_years INT,
+    education_level TEXT,
+    location TEXT,
+    salary INT,
+
+    -- 🔐 SECURITY FIELDS (VERY IMPORTANT)
+    username TEXT,
+    role TEXT
 );
 
 CREATE TABLE sessions (
