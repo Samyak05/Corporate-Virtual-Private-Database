@@ -1,236 +1,180 @@
-# Corporate Secure Database with RBAC & RLS
+# 🔐 Corporate Secure Database System (RBAC + RLS)
 
-A PostgreSQL-based implementation of **Virtual Private Database (VPD)** concepts using **Row Level Security (RLS)** to enforce fine-grained, context-aware access control.
-
-This project demonstrates how session-level variables can dynamically control row visibility, simulating Oracle VPD behavior in PostgreSQL.
+A full-stack system demonstrating **Role-Based Access Control (RBAC)** and **Row-Level Security (RLS)** using PostgreSQL, FastAPI, and a custom frontend.
 
 ---
 
-# 📌 Features
+# 🚀 Features
 
-- Role-Based Access Control (RBAC)
-- PostgreSQL Row Level Security (RLS)
-- Session-based row filtering using `current_setting()`
-- Department-level data isolation
-- Multiple application database roles
-- Admin full-access control
-- Structured modular SQL setup
+* Role-Based Access Control (RBAC)
+* Row-Level Security (RLS / VPD simulation)
+* JWT Authentication
+* Department-based data isolation
+* Location-based access control
+* Audit logging (triggers)
+* Full-stack integration (Frontend + Backend + DB)
 
 ---
 
-# 🛠️ Tech Stack
+# 🏗️ Tech Stack
 
-- PostgreSQL
-- SQL
-- Linux / WSL (Recommended)
-- Git & GitHub
+* PostgreSQL
+* FastAPI (Python)
+* HTML, CSS, JavaScript
+* JWT (python-jose)
 
 ---
 
 # 📂 Project Structure
 
 ```
-corporate-vpd/
-│
-├── README.md
-├── .gitignore
+corporate-vpd-system/
 │
 ├── database/
-│   ├── 01_database.sql
-│   ├── 02_tables.sql
-│   ├── 03_roles_and_users.sql
-│   ├── 04_seed_data.sql
-│   ├── 05_app_roles.sql
-│   ├── 06_rls_policies.sql
-│   └── run_order.txt
-│
-└── docs/
+├── backend/
+├── frontend/
+├── docs/
+└── README.md
 ```
 
 ---
 
-# 🚀 Complete Setup Guide (Fresh System)
+# ⚙️ Complete Setup (Fresh System)
 
-Follow these steps if PostgreSQL is NOT installed.
+Follow these steps **exactly**.
 
 ---
 
-## 1️⃣ Install PostgreSQL (Ubuntu / WSL)
+## 🔹 1. Clone Repository
 
-```bash
+```
+git clone https://github.com/Samyak05/corporate-secure-database-rbac-rls.git
+cd corporate-secure-database-rbac-rls
+```
+
+---
+
+## 🔹 2. Install PostgreSQL
+
+```
 sudo apt update
 sudo apt install postgresql postgresql-contrib
 ```
 
-Verify installation:
-
-```bash
-psql --version
-```
-
 ---
 
-## 2️⃣ Start PostgreSQL Service
+## 🔹 3. Setup Database
 
-```bash
-sudo service postgresql start
 ```
-
-Switch to postgres system user:
-
-```bash
 sudo -i -u postgres
-```
-
-Open PostgreSQL shell:
-
-```bash
 psql
 ```
 
----
+Inside psql:
 
-## 3️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/Samyak05/Corporate-Virtual-Private-Database.git
-cd Corporate-Virtual-Private-Database/
+```
+\i database/setup.sql
 ```
 
 ---
 
-## 4️⃣ Execute Database Setup Scripts (Important: Follow Order)
+## 🔹 4. Setup Backend
 
-Inside PostgreSQL shell:
+```
+cd backend
 
-```sql
-\i 01_database.sql
-\i 02_tables.sql
-\i 03_roles_and_users.sql
-\i 04_seed_data.sql
-\i 05_app_roles.sql
-\i 06_rls_policies.sql
-\i 07_audit_logging.sql
+# create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# install dependencies
+pip install -r requirements.txt
 ```
 
-Database setup complete ✅
+Create environment file:
 
----
-
-# 🔐 Testing Row-Level Security
-
-Example: Test HR Role Access
-
-Exit postgres user:
-
-```bash
-exit
+```
+cp .env.example .env
 ```
 
-Login as app_hr:
+Edit `.env`:
 
-```bash
-psql -U app_hr -d corporate_db
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=corporate_db
+SECRET_KEY=supersecretkey
+ALGORITHM=HS256
 ```
 
-Set session context:
+Run backend:
 
-```sql
-SET app.username = 'hr1';
-SET app.role = 'HR';
-SET app.department = 'HR';
-SET app.location = 'Internal';
 ```
-
-Now test access:
-
-```sql
-SELECT * FROM employees;
-```
-
-Only HR department records should be visible.
-
----
-
-# 🧠 How It Works
-
-Access control is enforced through:
-
-- PostgreSQL Row Level Security (RLS)
-- Custom session variables:
-  - `app.username`
-  - `app.role`
-  - `app.department`
-  - `app.location`
-- Policies using `current_setting()`
-
-Example policy logic:
-
-```sql
-USING (
-    current_setting('app.role', true) = 'HR'
-    AND department = current_setting('app.department', true)
-);
-```
-
-This dynamically filters rows based on session context.
-
----
-
-# 👥 Application Roles
-
-The system includes:
-
-- app_admin
-- app_manager
-- app_hr
-- app_employee
-- app_auditor
-
-Each role has specific privileges enforced by both GRANT statements and RLS policies.
-
----
-
-# ⚠️ Important Notes
-
-- All passwords included are demo credentials for academic purposes only.
-- Do NOT use hardcoded passwords in real production systems.
-- Row Level Security is enforced using:
-
-```sql
-ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
-ALTER TABLE employees FORCE ROW LEVEL SECURITY;
+uvicorn app.main:app --reload
 ```
 
 ---
 
-# 📖 Concepts Demonstrated
+## 🔹 5. Run Frontend
 
-- Fine-Grained Access Control
-- Virtual Private Database (VPD)
-- Session Context Variables
-- Dynamic Policy Enforcement
-- Multi-role Data Isolation
-- Database Security Design
+```
+cd frontend/src
+```
 
----
+Open:
 
-# 🎯 Learning Outcome
-
-This project demonstrates how to build secure, context-aware database systems using PostgreSQL without requiring application-layer filtering.
-
-It is suitable for:
-- Database security learning
-- Academic submission
-- Backend system design practice
-- Internship portfolio demonstration
+```
+index.html
+```
 
 ---
 
-# 📌 Future Improvements
+# 🧪 Test the System
 
-- Audit logging with triggers
-- Backend integration (FastAPI)
-- Dockerized PostgreSQL setup
-- Environment variable based credential management
-- API-level authentication integration
+Open browser:
+
+```
+http://127.0.0.1:8000/docs
+```
+
+Try:
+
+* `/login`
+* `/employees`
+* `/employees/update-salary`
+
+---
+
+# 🔐 Demo Users
+
+| Role     | Username | Password    |
+| -------- | -------- | ----------- |
+| HR       | hr1      | hrpass      |
+| Manager  | manager1 | managerpass |
+| Employee | Alice    | emppass     |
+| Auditor  | auditor1 | auditpass   |
+
+---
+
+# 🎯 What This Project Shows
+
+* Database-level security enforcement (RLS)
+* Context-aware access control
+* Separation of duties (Auditor role)
+* Secure backend integration
+* Real-world full-stack architecture
+
+---
+
+# ⚠️ Notes
+
+* This is an academic/demo project
+* Do not use hardcoded credentials in production
+
+---
+
+# 👨‍💻 Author
+
+Samyak Gedam
+
+---
