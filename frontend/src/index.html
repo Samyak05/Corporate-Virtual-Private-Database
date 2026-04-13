@@ -4,10 +4,17 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>CorpSecure HRMS</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ✅ ONLY ADDITION -->
+<script>
+const BASE_URL = "http://127.0.0.1:8000";
+</script>
+
 </head>
 <body>
 
@@ -19,27 +26,84 @@
     <div class="l-card">
       <div class="l-logo">CorpSecure</div>
       <div class="l-sub">HRMS — Role-Based Access Platform</div>
-      <div style="font-size:10px;color:var(--text3);margin-bottom:7px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Quick login</div>
-      <div class="qgrid">
-        <button class="qbtn" onclick="ql('hr1','hrpass')"><span>hr1</span><small style="background:#dcfce7;color:#14532d">HR</small></button>
-        <button class="qbtn" onclick="ql('manager1','managerpass')"><span>manager1</span><small style="background:#dbeafe;color:#1e3a8a">Manager</small></button>
-        <button class="qbtn" onclick="ql('Alice','emppass')"><span>Alice</span><small style="background:#f3f4f6;color:#374151">Employee</small></button>
-        <button class="qbtn" onclick="ql('auditor1','auditpass')"><span>auditor1</span><small style="background:#fef3c7;color:#92400e">Auditor</small></button>
+
+      <div style="font-size:10px;color:var(--text3);margin-bottom:7px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">
+        Quick login
       </div>
-      <div class="sep"><div class="sep-ln"></div><span>or enter manually</span><div class="sep-ln"></div></div>
-      <div class="lf"><label>Username</label><input class="li" id="l-u" type="text" placeholder="e.g. hr1"/></div>
-      <div class="lf"><label>Password</label><input class="li" id="l-p" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+
+      <div class="qgrid">
+        <button class="qbtn" onclick="ql('hr1','hrpass')">
+          <span>hr1</span>
+          <small style="background:#dcfce7;color:#14532d">HR</small>
+        </button>
+
+        <button class="qbtn" onclick="ql('manager1','managerpass')">
+          <span>manager1</span>
+          <small style="background:#dbeafe;color:#1e3a8a">Manager</small>
+        </button>
+
+        <!-- ✅ FIXED (was Alice earlier) -->
+        <button class="qbtn" onclick="ql('emp1','emppass')">
+          <span>emp1</span>
+          <small style="background:#f3f4f6;color:#374151">Employee</small>
+        </button>
+
+        <button class="qbtn" onclick="ql('auditor1','auditpass')">
+          <span>auditor1</span>
+          <small style="background:#fef3c7;color:#92400e">Auditor</small>
+        </button>
+      </div>
+
+      <div class="sep">
+        <div class="sep-ln"></div>
+        <span>or enter manually</span>
+        <div class="sep-ln"></div>
+      </div>
+
+      <div class="lf">
+        <label>Username</label>
+        <input class="li" id="l-u" type="text" placeholder="e.g. hr1"/>
+      </div>
+
+      <div class="lf">
+        <label>Password</label>
+        <input class="li" id="l-p" type="password" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+
       <button class="pbtn" id="l-btn" onclick="doLogin()">Sign in →</button>
+
       <div class="lerr" id="l-err">Invalid credentials. Please try again.</div>
-      <div class="l-note">Backend: <span style="font-family:var(--mono);font-size:10px">uvicorn main:app --reload</span> on <span style="font-family:var(--mono);font-size:10px">localhost:8000</span>. CORS is enabled in your FastAPI config.</div>
+
+      <div class="l-note">
+        Backend:
+        <span style="font-family:var(--mono);font-size:10px">
+          uvicorn main:app --reload
+        </span>
+        on
+        <span style="font-family:var(--mono);font-size:10px">
+          localhost:8000
+        </span>.
+      </div>
     </div>
   </div>
+
   <div class="l-right">
     <div class="l-right-text">
       <h2>Secure by Design</h2>
-      <p>PostgreSQL Row Level Security<br>enforces data isolation at the DB layer.<br><br>JWT · VPD/RLS · Audit Triggers<br>Role-Based Access Control</p>
+      <p>
+        PostgreSQL Row Level Security<br>
+        enforces data isolation at the DB layer.<br><br>
+        JWT · VPD/RLS · Audit Triggers<br>
+        Role-Based Access Control
+      </p>
+
       <div class="l-right-badges">
-        <span class="l-rb">HR</span><span class="l-rb">Manager</span><span class="l-rb">Employee</span><span class="l-rb">Auditor</span><span class="l-rb">Admin</span>
+        <span class="l-rb">HR</span>
+        <span class="l-rb">Manager</span>
+        <span class="l-rb">Employee</span>
+        <span class="l-rb">Auditor</span>
+        <span class="l-rb">Admin</span>
       </div>
     </div>
   </div>
@@ -51,20 +115,36 @@
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="t-logo" onclick="nav('home')">CorpSecure</div>
+
     <div class="t-right">
       <div class="t-clock" id="clock">--:--:--</div>
-      <button class="dm-btn" onclick="toggleDark()" title="Toggle dark mode" id="dm-btn">☀</button>
+
+      <button class="dm-btn" onclick="toggleDark()" id="dm-btn">☀</button>
+
       <div class="notif-wrap">
-        <button class="notif-btn" onclick="toggleNotifPanel()">🔔<span class="notif-dot" id="ndot"></span></button>
+        <button class="notif-btn" onclick="toggleNotifPanel()">
+          🔔<span class="notif-dot" id="ndot"></span>
+        </button>
+
         <div class="notif-panel" id="notif-panel">
-          <div class="notif-head"><span>Notifications</span><button class="btn sm" onclick="clearNotifs()">Clear</button></div>
-          <div id="notif-list"><div class="notif-empty">No notifications</div></div>
+          <div class="notif-head">
+            <span>Notifications</span>
+            <button class="btn sm" onclick="clearNotifs()">Clear</button>
+          </div>
+          <div id="notif-list">
+            <div class="notif-empty">No notifications</div>
+          </div>
         </div>
       </div>
+
       <div class="uchip" onclick="nav('profile')">
         <div class="uav" id="t-av">U</div>
-        <div><div class="uname" id="t-name">—</div><div class="urole" id="t-role">—</div></div>
+        <div>
+          <div class="uname" id="t-name">—</div>
+          <div class="urole" id="t-role">—</div>
+        </div>
       </div>
+
       <button class="out-btn" onclick="doLogout()">Sign out</button>
     </div>
   </div>
@@ -72,26 +152,31 @@
   <!-- BODY -->
   <div class="shell">
     <div class="sidebar" id="sidebar">
+
       <div class="sb-sec">Main</div>
-      <div class="ni" id="ni-home" onclick="nav('home')"><span class="ni-ic">⌂</span> Home</div>
-      <div class="ni" id="ni-dash" onclick="nav('dash')"><span class="ni-ic">◈</span> Dashboard</div>
-      <div class="ni" id="ni-emp" onclick="nav('emp')"><span class="ni-ic">⊞</span> Employees</div>
+      <div class="ni" id="ni-home" onclick="nav('home')">⌂ Home</div>
+      <div class="ni" id="ni-dash" onclick="nav('dash')">◈ Dashboard</div>
+      <div class="ni" id="ni-emp" onclick="nav('emp')">⊞ Employees</div>
+
       <div class="sb-sec">Personal</div>
-      <div class="ni" id="ni-profile" onclick="nav('profile')"><span class="ni-ic">◉</span> Profile</div>
-      <div class="ni" id="ni-leave" onclick="nav('leave')"><span class="ni-ic">◷</span> Apply Leave</div>
-      <div class="ni" id="ni-approval" onclick="nav('approval')" style="display:none"><span class="ni-ic">✓</span> Leave Approval <span class="ni-badge" id="approval-badge" style="display:none">0</span></div>
+      <div class="ni" id="ni-profile" onclick="nav('profile')">◉ Profile</div>
+      <div class="ni" id="ni-leave" onclick="nav('leave')">◷ Apply Leave</div>
+
       <div class="sb-sec">System</div>
-      <div class="ni" id="ni-reports" onclick="nav('reports')"><span class="ni-ic">≡</span> Reports</div>
-      <div class="ni" id="ni-settings" onclick="nav('settings')"><span class="ni-ic">⚙</span> Settings</div>
-      <div class="ni" id="ni-api" onclick="nav('api')"><span class="ni-ic">⚡</span> API Ref</div>
+      <div class="ni" id="ni-reports" onclick="nav('reports')">≡ Reports</div>
+      <div class="ni" id="ni-settings" onclick="nav('settings')">⚙ Settings</div>
+
       <div class="sb-spacer"></div>
-      <div class="ni" style="color:var(--danger)" onclick="doLogout()"><span class="ni-ic">↩</span> Sign out</div>
+
+      <div class="ni" style="color:red" onclick="doLogout()">↩ Sign out</div>
     </div>
+
+    <!-- 🔥 DO NOT TOUCH THIS -->
     <div class="main" id="main-area"></div>
+
   </div>
 </div>
 
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

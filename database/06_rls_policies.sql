@@ -1,22 +1,37 @@
--- Enable Row Level Security (VPD Equivalent)
+-- Enable Row Level Security
 ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
 ALTER TABLE employees FORCE ROW LEVEL SECURITY;
 
 
+-- ===============================
+-- DROP EXISTING POLICIES (CLEAN)
+-- ===============================
 
--- Create Row Level Security Policies
+DROP POLICY IF EXISTS hr_policy ON employees;
+DROP POLICY IF EXISTS hr_update_policy ON employees;
 
--- HR Policy
-CREATE  POLICY hr_policy
+DROP POLICY IF EXISTS manager_policy ON employees;
+DROP POLICY IF EXISTS manager_update_policy ON employees;
+
+DROP POLICY IF EXISTS employee_policy ON employees;
+
+DROP POLICY IF EXISTS admin_policy ON employees;
+DROP POLICY IF EXISTS admin_delete_policy ON employees;
+
+DROP POLICY IF EXISTS hr_insert_policy ON employees;
+
+
+-- ===============================
+-- HR POLICY (HYBRID)
+-- ===============================
+
+CREATE POLICY hr_policy
 ON employees
 FOR SELECT
 USING (
     current_setting('app.role', true) = 'HR'
-    AND department = current_setting('app.department', true)
 );
 
---HR can UPDATE only when Internal
---If External → blocked by RLS
 CREATE POLICY hr_update_policy
 ON employees
 FOR UPDATE
@@ -24,16 +39,24 @@ USING (
     current_setting('app.role', true) = 'HR'
     AND department = current_setting('app.department', true)
     AND current_setting('app.location', true) = 'Internal'
+)
+WITH CHECK (
+    current_setting('app.role', true) = 'HR'
+    AND current_setting('app.location', true) = 'Internal'
 );
 
 
--- Manager Policy
+-- ===============================
+-- MANAGER POLICY
+-- ===============================
+
 CREATE POLICY manager_policy
 ON employees
 FOR SELECT
 USING (
     current_setting('app.role', true) = 'Manager'
     AND department = current_setting('app.department', true)
+    AND is_active = TRUE
 );
 
 CREATE POLICY manager_update_policy
@@ -43,32 +66,55 @@ USING (
     current_setting('app.role', true) = 'Manager'
     AND department = current_setting('app.department', true)
     AND current_setting('app.location', true) = 'Internal'
+)
+WITH CHECK (
+    current_setting('app.role', true) = 'Manager'
+    AND current_setting('app.location', true) = 'Internal'
 );
 
 
+-- ===============================
+-- EMPLOYEE POLICY
+-- ===============================
 
--- Employee Policy
 CREATE POLICY employee_policy
 ON employees
 FOR SELECT
 USING (
     current_setting('app.role', true) = 'Employee'
-    AND emp_name = current_setting('app.username', true)
+    AND username = current_setting('app.username', true)
+    AND is_active = TRUE
 );
 
 
+-- ===============================
+-- ADMIN POLICY
+-- ===============================
 
--- Admin Policy
 CREATE POLICY admin_policy
 ON employees
 FOR SELECT
 USING (
     current_setting('app.role', true) = 'Admin'
+    AND is_active = TRUE
 );
--- Admin DELETE Policy
+
 CREATE POLICY admin_delete_policy
 ON employees
 FOR DELETE
 USING (
     current_setting('app.role', true) = 'Admin'
+);
+
+
+-- ===============================
+-- HR INSERT POLICY
+-- ===============================
+
+CREATE POLICY hr_insert_policy
+ON employees
+FOR INSERT
+WITH CHECK (
+    current_setting('app.role', true) = 'HR'
+    AND current_setting('app.location', true) = 'Internal'
 );

@@ -24,9 +24,12 @@ CREATE TABLE employees (
     location TEXT,
     salary INT,
 
-    -- 🔐 SECURITY FIELDS (VERY IMPORTANT)
+    -- SECURITY FIELDS
     username TEXT,
-    role TEXT
+    role TEXT,
+
+    -- NEW FIELD: SOFT DELETE SUPPORT
+    is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE sessions (
@@ -45,5 +48,10 @@ CREATE TABLE audit_logs (
     access_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     result VARCHAR(20)
 );
+
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_audit_user ON audit_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_logs(access_time);
+
+--  OPTIONAL: Performance index for active employees
+CREATE INDEX IF NOT EXISTS idx_employees_active ON employees(is_active);
