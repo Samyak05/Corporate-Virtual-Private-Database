@@ -8,7 +8,7 @@ TRUNCATE TABLE employees RESTART IDENTITY CASCADE;
 -- STEP 1: LOAD CSV DATA
 -- ===============================
 
-COPY employees(
+\copy employees(
     emp_id,
     emp_name,
     age,
@@ -20,7 +20,7 @@ COPY employees(
     location,
     salary
 )
-FROM '/home/samyak/projects/corporate-vpd/database/Employers_data.csv'
+FROM 'Employers_data.csv'
 DELIMITER ','
 CSV HEADER;
 

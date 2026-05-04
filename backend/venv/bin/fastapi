@@ -1,0 +1,8 @@
+#!/Users/piyushkkarn/Documents/M_tech_2nd_sem/DataBase_Security/Project/project/corporate-secure-database-rbac-rls/backend/venv/bin/python3
+# -*- coding: utf-8 -*-
+import re
+import sys
+from fastapi.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
